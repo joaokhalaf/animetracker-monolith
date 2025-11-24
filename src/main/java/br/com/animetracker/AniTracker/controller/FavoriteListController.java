@@ -17,8 +17,14 @@ import br.com.animetracker.AniTracker.model.FavoriteList;
 import br.com.animetracker.AniTracker.security.CustomUserDetails;
 import br.com.animetracker.AniTracker.service.FavoriteListService;
 import br.com.animetracker.AniTracker.service.FavoriteService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Controller
+@Tag(name = "Favorite Lists", description = "Endpoints para gerenciar listas personalizadas de animes favoritos")
 public class FavoriteListController {
 
     @Autowired
@@ -79,9 +85,15 @@ public class FavoriteListController {
 
     @PostMapping("/api/favorite-lists/create")
     @ResponseBody
+    @Operation(summary = "Criar lista de favoritos", description = "Cria uma nova lista personalizada de animes favoritos")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Lista criada com sucesso"),
+        @ApiResponse(responseCode = "401", description = "Usuário não autenticado"),
+        @ApiResponse(responseCode = "400", description = "Dados inválidos")
+    })
     public ResponseEntity<Map<String, Object>> createFavoriteList(
-            @RequestParam("name") String name,
-            @RequestParam("description") String description,
+            @Parameter(description = "Nome da lista") @RequestParam("name") String name,
+            @Parameter(description = "Descrição da lista") @RequestParam("description") String description,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         Map<String, Object> response = new HashMap<>();
@@ -109,10 +121,16 @@ public class FavoriteListController {
 
 @PutMapping("/api/favorite-lists/{id}/update")
 @ResponseBody
+@Operation(summary = "Atualizar lista de favoritos", description = "Atualiza nome e descrição de uma lista existente")
+@ApiResponses(value = {
+    @ApiResponse(responseCode = "200", description = "Lista atualizada com sucesso"),
+    @ApiResponse(responseCode = "401", description = "Usuário não autenticado"),
+    @ApiResponse(responseCode = "400", description = "Dados inválidos")
+})
 public ResponseEntity<Map<String, Object>> updateFavoriteList(
-        @PathVariable("id") Long listId,
-        @RequestParam("name") String name,
-        @RequestParam("description") String description,
+        @Parameter(description = "ID da lista") @PathVariable("id") Long listId,
+        @Parameter(description = "Novo nome da lista") @RequestParam("name") String name,
+        @Parameter(description = "Nova descrição da lista") @RequestParam("description") String description,
         @AuthenticationPrincipal CustomUserDetails userDetails) {
 
     Map<String, Object> response = new HashMap<>();
@@ -139,8 +157,13 @@ public ResponseEntity<Map<String, Object>> updateFavoriteList(
 
     @DeleteMapping("/api/favorite-lists/{id}/delete")
     @ResponseBody
+    @Operation(summary = "Deletar lista de favoritos", description = "Remove uma lista de favoritos permanentemente")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Lista deletada com sucesso"),
+        @ApiResponse(responseCode = "401", description = "Usuário não autenticado")
+    })
     public ResponseEntity<Map<String, Object>> deleteFavoriteList(
-            @PathVariable("id") Long listId,
+            @Parameter(description = "ID da lista a ser deletada") @PathVariable("id") Long listId,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         Map<String, Object> response = new HashMap<>();
@@ -162,9 +185,14 @@ public ResponseEntity<Map<String, Object>> updateFavoriteList(
 
     @PostMapping("/api/favorite-lists/add-anime")
     @ResponseBody
+    @Operation(summary = "Adicionar anime à lista", description = "Adiciona um anime a uma lista de favoritos específica")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Anime adicionado à lista com sucesso"),
+        @ApiResponse(responseCode = "401", description = "Usuário não autenticado")
+    })
     public ResponseEntity<Map<String, Object>> addAnimeToList(
-            @RequestParam("listId") Long listId,
-            @RequestParam("animeId") Long animeId,
+            @Parameter(description = "ID da lista") @RequestParam("listId") Long listId,
+            @Parameter(description = "ID do anime") @RequestParam("animeId") Long animeId,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         Map<String, Object> response = new HashMap<>();
@@ -186,9 +214,14 @@ public ResponseEntity<Map<String, Object>> updateFavoriteList(
 
     @DeleteMapping("/api/favorite-lists/{id}/remove-anime")
     @ResponseBody
+    @Operation(summary = "Remover anime da lista", description = "Remove um anime de uma lista de favoritos específica")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Anime removido da lista com sucesso"),
+        @ApiResponse(responseCode = "401", description = "Usuário não autenticado")
+    })
     public ResponseEntity<Map<String, Object>> removeAnimeFromList(
-            @PathVariable("id") Long listId,
-            @RequestParam("animeId") Long animeId,
+            @Parameter(description = "ID da lista") @PathVariable("id") Long listId,
+            @Parameter(description = "ID do anime a ser removido") @RequestParam("animeId") Long animeId,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         Map<String, Object> response = new HashMap<>();

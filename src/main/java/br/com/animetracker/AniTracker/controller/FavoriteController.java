@@ -14,9 +14,15 @@ import org.springframework.web.bind.annotation.*;
 import br.com.animetracker.AniTracker.model.Anime;
 import br.com.animetracker.AniTracker.security.CustomUserDetails;
 import br.com.animetracker.AniTracker.service.FavoriteService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 
 @Controller
+@Tag(name = "Favorites", description = "Endpoints para gerenciar animes favoritos")
 public class FavoriteController {
 
     @Autowired
@@ -45,8 +51,13 @@ public class FavoriteController {
 
     @PostMapping("/api/favorites/add")
     @ResponseBody
+    @Operation(summary = "Adicionar anime aos favoritos", description = "Adiciona um anime à lista de favoritos do usuário")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Anime adicionado aos favoritos com sucesso"),
+        @ApiResponse(responseCode = "401", description = "Usuário não autenticado")
+    })
     public ResponseEntity<Map<String, Object>> addFavorite(
-            @RequestParam("animeId") Long animeId,
+            @Parameter(description = "ID do anime a ser adicionado") @RequestParam("animeId") Long animeId,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         Map<String, Object> response = new HashMap<>();
@@ -68,8 +79,13 @@ public class FavoriteController {
 
     @DeleteMapping("/api/favorites/remove")
     @ResponseBody
+    @Operation(summary = "Remover anime dos favoritos", description = "Remove um anime da lista de favoritos do usuário")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Anime removido dos favoritos com sucesso"),
+        @ApiResponse(responseCode = "401", description = "Usuário não autenticado")
+    })
     public ResponseEntity<Map<String, Object>> removeFavorite(
-            @RequestParam("animeId") Long animeId,
+            @Parameter(description = "ID do anime a ser removido") @RequestParam("animeId") Long animeId,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         Map<String, Object> response = new HashMap<>();
