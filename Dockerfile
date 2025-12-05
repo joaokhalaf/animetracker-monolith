@@ -4,6 +4,9 @@ RUN apt-get update
 RUN apt-get install openjdk-21-jdk -y
 COPY . .
 
+RUN npm install
+RUN npm run build:css
+
 RUN apt-get install maven -y
 RUN mvn clean install
 
