@@ -1,13 +1,15 @@
 FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
 
+RUN apt-get update && apt-get install -y nodejs npm
+
 COPY . .
 
-RUN if [ -f package.json ]; then npm install && npm run build:css; fi
+RUN npm install && npm run build:css
 
-RUN mvn clean package -DskipTests
+RUN mvn clean package
 
-FROM eclipse-temurin:21-jdk
+FROM eclipse-temurin:21-jdk-slim
 WORKDIR /app
 
 EXPOSE 8080
