@@ -1,19 +1,17 @@
-FROM ubuntu:latest AS build
+FROM maven:3.9.6-eclipse-temurin-21 AS build
+WORKDIR /app
 
-RUN apt-get update
-RUN apt-get install openjdk-21-jdk -y
 COPY . .
 
-RUN npm install
-RUN npm run build:css
+RUN if [ -f package.json ]; then npm install && npm run build:css; fi
 
-RUN apt-get install maven -y
-RUN mvn clean install
+RUN mvn clean package -DskipTests
 
-FROM openjdk:21-jdk-slim
+FROM eclipse-temurin:21-jdk
+WORKDIR /app
 
 EXPOSE 8080
 
-COPY --from=build /target/AniTracker-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /app/target/AniTracker-0.0.1-SNAPSHOT.jar app.jar
 
-ENTRYPOINT [ "java", "-jar", "app.jar" ]
+ENTRYPOINT ["java", "-jar", "app.jar"]
