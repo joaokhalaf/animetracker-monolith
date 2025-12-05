@@ -34,3 +34,10 @@ build/
 
 ### Environment Variables ###
 .env
+
+### Node.js ###
+node_modules/
+
+### Tailwind CSS - output is generated, not committed ###
+# Uncomment the line below if you prefer to commit the compiled CSS
+# src/main/resources/static/css/tailwind.css

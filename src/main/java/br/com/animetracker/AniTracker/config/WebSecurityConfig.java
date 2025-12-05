@@ -15,19 +15,21 @@ import br.com.animetracker.AniTracker.security.CustomUserDetailsService;
 @EnableWebSecurity
 public class WebSecurityConfig {
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();    }
+    private final CustomUserDetailsService customUserDetailsService;
+
+    public WebSecurityConfig(CustomUserDetailsService customUserDetailsService) {
+        this.customUserDetailsService = customUserDetailsService;
+    }
 
     @Bean
-    public CustomUserDetailsService userDetailsService() {
-        return new CustomUserDetailsService();
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .userDetailsService(userDetailsService())
+            .userDetailsService(customUserDetailsService)
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/", "/login", "/register", "/css/**", "/js/**", "/images/**", "/search-results").permitAll()
                 .requestMatchers("/favorites", "/api/favorites/**").authenticated()
