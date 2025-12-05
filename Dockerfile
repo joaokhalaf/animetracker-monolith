@@ -7,9 +7,9 @@ COPY . .
 
 RUN npm install && npm run build:css
 
-RUN mvn clean package
+RUN mvn clean package -DskipTests
 
-FROM eclipse-temurin:21-jdk-slim
+FROM eclipse-temurin:21-jdk
 WORKDIR /app
 
 EXPOSE 8080
